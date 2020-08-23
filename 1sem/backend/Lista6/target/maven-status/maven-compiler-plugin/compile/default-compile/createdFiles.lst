@@ -1,6 +1,0 @@
-models/PessoaJuridica.class
-Clientes.class
-services/Conexao.class
-services/ClienteDAO.class
-models/Cliente.class
-models/PessoaFisica.class
