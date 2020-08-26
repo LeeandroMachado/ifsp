@@ -1,42 +1,38 @@
+const degtorad = Math.PI / 180;
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/serviceWorker.js')
+      .register('serviceWorker.js')
       .then(res => console.log('service worker registered'))
       .catch(err => console.log('service worker not registered', err))
   })
 }
 
-if ('mediaDevices' in navigator) {
-  navigator.mediaDevices.enumerateDevices().then(async (devices) => {
-    const cameras = devices.filter((device) => device.kind === 'videoinput');
+const handleGyroscope = event => {
+  const { alpha } = event;
+  const compass = document.getElementById('compass');
 
-    if (!cameras.length) {
-      throw 'No camera found on this device.';
-    }
+  compass.style.transform = `rotate(${alpha}deg)`;
+  compass.style.webkitTransform = `rotate(${alpha}deg)`;
+  compass.style.MozTransform = `rotate(${alpha}deg)`;
+};
 
-    const camera = cameras[cameras.length - 1];
+const requestDeviceOrientation = () => {
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission().then(permissionState => {
+      if (permissionState === 'granted') {
+        window.addEventListener('deviceorientation', handleGyroscope, true);
+      }
+    })
+  } else {
+    window.addEventListener('deviceorientation', handleGyroscope, true);
+  }
+};
 
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          deviceId: camera.deviceId,
-          facingMode: ['user', 'environment'],
-          height: {ideal: 1080},
-          width: {ideal: 1920}
-        }
-      });
+window.addEventListener('DOMContentLoaded', () => {
+  const playButton = document.getElementById('play-button');
+  playButton.addEventListener('click', requestDeviceOrientation);
+});
 
-      const track = stream.getVideoTracks()[0];
-      const imageCapture = new ImageCapture(track);
-      const photoCapabilities = await imageCapture.getPhotoCapabilities();
 
-      const btn = document.getElementById('flash-button');
-      btn.addEventListener('click', () => {
-        track.applyConstraints({advanced: [{torch: true}]});
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  });
-}

@@ -1,5 +1,5 @@
-const CACHE_NAME = 'FlashLight';
-const assets = ['/', '/index.html', '/manifest.json', '/js/app.js'];
+const CACHE_NAME = 'Compass';
+const assets = ['./', './index.html', './manifest.json', './js/index.js', './js/install.js'];
 
 self.addEventListener('install', e => {
   console.log('[Service Worker] Install');
@@ -17,7 +17,7 @@ self.addEventListener('fetch', fetchEvent => {
       return res || fetch(fetchEvent.request)
     })
   )
-})
+});
 
 self.addEventListener('activate', e => {
   e.waitUntil(
