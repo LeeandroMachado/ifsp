@@ -1,0 +1,16 @@
+{
+  "short_name": "FlashLight",
+  "name": "FlashLight",
+  "icons": [
+    {
+      "src": "img/icon.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#43a047",
+  "background_color": "#388E3C"
+}
